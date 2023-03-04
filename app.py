@@ -28,28 +28,28 @@ def details():
 			'Accept-Language': 'en-US,en;q=0.9'
 			}
 
-			logging.info("Requesting HTML...")
+			logging.info("Html...")
 			response = requests.get(url, headers=headers)
 			response_text = response.text
 
-			#titles
-			logging.info("Finding titles...")
+			
+			logging.info("titles...")
 			vid_titles = re.findall('"title":{"runs":\[{"text":".*?"', response_text)
 
-			#thumbnails
-			logging.info("Finding thumbnails...")
+			
+			logging.info("thumbnails...")
 			vid_thumbnails = re.findall(r"https://i.ytimg.com/vi/[A-Za-z0-9_-]{11}/[A-Za-z0-9_]{9}.jpg", response_text)
 
-			#links
-			logging.info("Finding links...")
+			
+			logging.info("links...")
 			vid_links = re.findall(r"watch\?v=[A-Za-z0-9_-]{11}", response_text)
 
-			#view count
-			logging.info("Finding view counts...")
+			
+			logging.info("view counts...")
 			pattern3 = re.compile(r"[0-9]+(\.[0-9]+)?[a-zA-Z]*K views")
 
-			#time posted
-			logging.info("Finding videos age...")
+			
+			logging.info("videos age...")
 			pattern4 = re.compile(r"\d+ (minutes|hours|hour|days|day|weeks|week|years|year) ago")
 
 			matches1 = pattern3.finditer(response_text)
@@ -62,15 +62,15 @@ def details():
 				vid_ages.append(match2[0])
 				vid_viewcounts.append(match1[0])
 
-			logging.info("Storing titles...")
+			logging.info("titles...")
 			titles = vid_titles[0:10]
-			logging.info("Storing thumbnails...")
+			logging.info("thumbnails...")
 			thumbnails = list(dict.fromkeys(vid_thumbnails))
-			logging.info("Storing links...")
+			logging.info("links...")
 			links = vid_links[0:10]
-			logging.info("Storing viewcounts...")
+			logging.info("viewcounts...")
 			viewcounts=vid_viewcounts[0:20:2]
-			logging.info("Storing videos age...")
+			logging.info("age...")
 			ages=vid_ages[0:20:2]
 
 			details_list=[]
@@ -82,7 +82,7 @@ def details():
 				}
 				details_list.append(details_dict)
 
-			#storing data into a csv file
+			
 			df = pd.DataFrame(details_list)
 			df.to_csv('YTscrapData.csv', index=False)
 
@@ -93,5 +93,4 @@ def details():
 			print(e)
 
 if __name__ == "__main__":
-	app.run(host='127.0.0.1', port=8000, debug=True)
-	#app.run(debug = True)
+	app.run(host='0.0.0.0', port=8000, debug=True)
